@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>const vscode = acquireVsCodeApi();</script>
+    <script defer src="{{alpineJS}}"></script>
+    <style>
+        [x-placeholder]:empty::before {
+            display: block;
+            content: attr(x-placeholder);
+            cursor: text;
+        }
+    </style>
+</head>
+
+<body>
+    <form @submit.prevent="" x-init="window.addEventListener('message', handleMessage.bind($data));requestDocument()" x-data="{
+            doc_id:'{{doc_id}}', 
+            doc:null,
+            loaded:false, 
+            requestDocument(){
+                vscode.postMessage({ command: 'document_request',data: this.doc_id});
+            },
+            requestSave(){
+                vscode.postMessage({ command: 'document_save',data: {doc_id:this.doc_id,doc:JSON.stringify(this.doc)}});
+            },
+            showInformationMessage(message){
+                vscode.postMessage({ command: 'showInformationMessage',data: message});
+            },
+            handleMessage(event){
+                const message = event.data;
+                switch (message.command) {
+                    case 'document_response':
+                        this.doc = JSON.parse(message.data);
+                        this.loaded = true;
+                        break;
+                    case 'document_saved':
+                        this.showInformationMessage('Document << '+ this.doc.title +' >> sauvegardé.')
+                        break;
+                }
+            }
+        }">
+        <template x-if="loaded">
+            <div class="docEditor">
+                <p style="opacity:0.5;"><small x-text="'id: '+doc_id"></small></p>
+                <h1 @input="doc.title = $event.target.innerText " x-placeholder="Entrez un titre" contenteditable="true" x-text="doc.title"></h1>
+                <p @input="doc.description = $event.target.innerText.replace('\n','<br/>') " x-placeholder="Entrez une description" x-model="doc.description" contenteditable="true"></p>
+                <button @click="requestSave">Sauvegarder</button>
+            </div>
+
+        </template>
+
+        <template x-if="!loaded">
+            <div style="height: 100vh;width: 100%;display: flex;justify-content: center;flex-direction: column;">
+                <i style="align-self:center;font-size:30px" class="fas fa-file-invoice fa-spin"></i>
+                <h1 style="align-self:center;">Chargement du document... </h1>
+            </div>
+        </template>
+    </form>
+</body>
+
+</html>
