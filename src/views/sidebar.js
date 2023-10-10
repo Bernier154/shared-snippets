@@ -111,7 +111,17 @@ module.exports = class SidebarView {
 
     getChildren(key) {
         // Si pas de key, on retourne les élément principaux
-        if (!key) { return ['webview:hub', 'section:trashed', 'section:categories', 'section:tags']; }
+        if (!key) {
+            const mainkeys = [];
+            // mainkeys.push('webview:hub');
+            if (Doc.all([['status', '===', DocStatus.Trashed]], true)) {
+                mainkeys.push('section:trashed');
+            }
+
+            mainkeys.push('section:categories');
+            mainkeys.push('section:tags');
+            return mainkeys;
+        }
         const sidebarKey = new SidebarKey(key);
         switch (sidebarKey.key) {
             case 'section':
@@ -127,7 +137,7 @@ module.exports = class SidebarView {
                         return docs ? docs.map(doc => 'doc:' + doc.id) : false;
                     case 'trashed':
                         var docs = Doc.all([['status', '===', DocStatus.Trashed]], true);
-                        return docs ? [...docs.map(doc => 'doc:' + doc.id)] : false;
+                        return docs ? [...docs.map(doc => 'doc:' + doc.id + ":trashed")] : false;
                     case 'tags':
                         var tags = Doc.uniqueTags();
                         return tags.map(x => 'tag:' + x);

@@ -11,6 +11,7 @@ const ViewerView = require('./views/viewer');
 const EditorView = require('./views/editor');
 const EditorProvider = require('./helpers/editorProvider');
 const setLocalFilePath = require('./helpers/setLocalFilePath');
+const importBlock = require('./helpers/importBlock');
 
 module.exports = class SnippeTeam {
 
@@ -30,6 +31,10 @@ module.exports = class SnippeTeam {
     registerCommands() {
         vscode.commands.registerCommand('snippeteam.hub', () => { HubView.show() });
         vscode.commands.registerCommand('snippeteam.set.localFilePath', () => setLocalFilePath());
+        vscode.commands.registerCommand('snippeteam.import', importBlock.selectBlock);
+        vscode.commands.registerTextEditorCommand('snippeteam.insert.block', importBlock.insertBlock);
+
+
         Doc.commands();
         Category.commands();
         ViewerView.commands();

@@ -47,6 +47,10 @@
                 "title": "SnippeTeam: Change le chemin de la base de donnée"
             },
             {
+                "command": "snippeteam.import",
+                "title": "spi: Importer un bloc de code"
+            },
+            {
                 "command": "snippeteam.doc.create",
                 "title": "Créer un nouveau document",
                 "icon": "$(new-file)"

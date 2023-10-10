@@ -5,12 +5,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>const vscode = acquireVsCodeApi();</script>
+    <link rel="stylesheet" href="{{css}}">
+    <script defer src="{{alpineJS}}"></script>
+    <script src="{{hljs}}"></script>
+
 </head>
 
 <body>
-    <div class="snippeteam__content">
-        <pre>{{json}}</pre>
+    <div class=" snippeteam__content snippeteam__viewer">
+        <div x-init="
+                window.addEventListener('message', handleMessage.bind($data));
+                requestDocument();
+            " x-data="{
+                doc_id:'{{doc_id}}', 
+                doc:null,
+                loaded:false, 
+                requestDocument(){
+                    vscode.postMessage({ command: 'document_request',data: this.doc_id});
+                },
+                handleMessage(event){
+                    const message = event.data;
+                    switch (message.command) {
+                        case 'document_response':
+                            this.doc = JSON.parse(message.data);
+                            this.doc.files = this.doc.files.map(file=>JSON.parse(file));
+                            this.loaded = true;
+                            break;
+                    }
+                }
+            }">
+            <template x-if="loaded">
+                <div class="docEditor">
+                    <h1 x-text="doc.title"></h1>
+                    <p x-text="doc.description"></p>
+
+                    <template x-for="file in doc.files">
+                        <div>
+                            <h2 x-text="file.name"></h2>
+                            <pre class="theme-vs" x-html="hljs.highlight(file.content,{language:file.language}).value"></pre>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <template x-if="!loaded">
+                <div style="height: 100vh;width: 100%;display: flex;justify-content: center;flex-direction: column;">
+                    <i style="align-self:center;font-size:30px" class="fas fa-file-invoice fa-spin"></i>
+                    <h1 style="align-self:center;">Chargement du document... </h1>
+                </div>
+            </template>
+        </div>
     </div>
+
 
 </body>
 

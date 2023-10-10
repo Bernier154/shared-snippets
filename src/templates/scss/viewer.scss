@@ -1,0 +1,15 @@
+@import './common';
+@import './vs_hljs';
+
+
+.snippeteam__viewer {
+    pre {
+        background-color: #1d2021;
+        font-weight: 500;
+        font-size: 14px;
+        opacity: 1;
+        padding: 20px;
+        background-color: var(--vscode-editorWidget-background);
+        border: 1px solid var(--vscode-widget-border);
+    }
+}

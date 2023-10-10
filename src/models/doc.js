@@ -117,6 +117,16 @@ exports.Doc = class Doc {
         return false;
     }
 
+    static getByTitle(title) {
+        const db = DbProvider.consume();
+        const docJSON = db.query(DbRequest.select('docs').where('title', '==', title));
+        if (docJSON) {
+            return Doc.fromJSON(docJSON);
+        }
+
+        return false;
+    }
+
     static uniqueTags() {
         const docs = Doc.all();
         return docs.reduce((tags, doc) => {

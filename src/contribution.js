@@ -39,6 +39,10 @@ contribution.commands = [
         "command": "snippeteam.set.localFilePath",
         "title": "SnippeTeam: Change le chemin de la base de donnée"
     },
+    {
+        "command": "snippeteam.import",
+        "title": "spi: Importer un bloc de code"
+    },
 
     // DOC
     {
