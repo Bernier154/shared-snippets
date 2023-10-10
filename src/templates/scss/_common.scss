@@ -1,0 +1,16 @@
+.snippeteam__content {
+    --snippeteam_input_padding: 6px 10px;
+
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 80%;
+}
+
+[x-placeholder]:empty::before {
+    display: block;
+    content: attr(x-placeholder);
+    cursor: text;
+}

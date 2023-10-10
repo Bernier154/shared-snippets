@@ -1,0 +1,153 @@
+@import './common';
+
+.snippeteam__editor {
+
+    button {
+        font-size: 14px;
+        padding: 8px 10px;
+        border: 1px solid var(--vscode-button-border);
+        color: var(--vscode-button-foreground);
+        background-color: var(--vscode-button-background);
+
+        &:hover {
+            background-color: var(--vscode-button-hoverBackground);
+            ;
+        }
+
+
+    }
+
+    .save_head {
+        display: flex;
+        justify-content: space-between;
+
+        small {
+            opacity: 0.5;
+        }
+    }
+
+    .row_action {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+
+    .action_footer {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .file_editor {
+        background-color: var(--vscode-editorWidget-background);
+        border: 1px solid var(--vscode-widget-border);
+        margin-bottom: 45px;
+
+        .header {
+            padding: 15px;
+            border-bottom: 1px solid var(--vscode-widget-border);
+            display: flex;
+
+            input,
+            select {
+                background-color: var(--vscode-input-background);
+                color: var(--vscode-input-foreground);
+                border: 1px solid var(--vscode-input-border);
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+        }
+
+
+
+        select {
+            margin-right: 50px;
+            margin-left: auto;
+        }
+
+        .editor_wrapper {
+            background-color: #1e1e1e;
+            padding: 10px 0;
+        }
+
+        .monaco_editor {
+            height: 400px;
+        }
+    }
+
+
+    .doc_title {
+        background-color: var(--vscode-input-background);
+        padding: var(--snippeteam_input_padding);
+        border: 1px solid var(--vscode-input-border);
+    }
+
+    .doc_description {
+        background-color: var(--vscode-input-background);
+        padding: var(--snippeteam_input_padding);
+        border: 1px solid var(--vscode-input-border);
+    }
+
+
+
+}
+
+.tags-input {
+    display: inline-block;
+    padding: 0 2px;
+    background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    border: 1px solid var(--vscode-input-border);
+    width: 16em;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 8px 10px;
+    flex-grow: 1;
+    margin-right: 50px;
+
+    .tag {
+        display: inline-block;
+        background-color: var(--vscode-button-background);
+        color: var(--vscode-button-foreground);
+        padding: 0 4px;
+        margin: 2px;
+        border: 1px solid var(--vscode-input-border);
+        border-radius: 2px;
+        font: inherit;
+        user-select: none;
+        cursor: pointer;
+        transition: all 100ms ease;
+
+        &.selected {
+            background-color: var(--vscode-button-hoverBackground);
+            border-color: var(--vscode-input-border);
+            color: var(--vscode-button-foreground);
+
+            transform: scale3d(1.05, 1.05, 1.05);
+            background-color: #002f54;
+        }
+
+        &.dupe {
+            transform: scale3d(1.2, 1.2, 1.2);
+            background-color: #FCC;
+            border-color: #700;
+        }
+    }
+
+    input {
+        appearance: none !important;
+        display: inline-block !important;
+        padding: 3px;
+        margin: 0 !important;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: #fff;
+        font: inherit !important;
+        font-size: 100% !important;
+        outline: none !important;
+    }
+
+    .selected~input {
+        opacity: 0.3;
+    }
+}

@@ -1,3 +1,3 @@
-exports.defaultConfigs = {
-    "localFilePath": process.env.APPDATA + "/snippeteam"
+module.exports = {
+    localFilePath: process.env.APPDATA + "/snippeteam"
 }

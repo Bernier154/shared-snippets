@@ -1,156 +1,182 @@
 {
-  "name": "snippeteam",
-  "displayName": "SnippeTeam",
-  "description": "Share snippets with other devs",
-  "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.83.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [],
-  "main": "./src/main.js",
-  "contributes": {
-    "configuration": {
-      "title": "SnippeTeam",
-      "properties": {
-        "snippeteam.databaseAdapter": {
-          "type": "string",
-          "default": "local",
-          "enum": [
-            "local"
-          ],
-          "enumDescriptions": [
-            "Syncs the database file locally."
-          ],
-          "description": "Choose how the database will be saved."
-        },
-        "snippeteam.localPath": {
-          "type": "string",
-          "default": "~\\AppData\\Roaming\\snippeteam",
-          "description": "The path of the folder where the database file will be saved."
-        }
-      }
+    "name": "snippeteam",
+    "displayName": "SnippeTeam",
+    "description": "Share snippets with other devs",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.83.0"
     },
-    "commands": [
-      {
-        "command": "snippeteam.hub",
-        "title": "Ouvrir le hub SnippeTeam"
-      },
-      {
-        "command": "snippeteam.doc.create",
-        "title": "Créer un nouveau document",
-        "icon": "$(new-file)"
-      },
-      {
-        "command": "snippeteam.doc.edit",
-        "title": "Éditer le document",
-        "icon": "$(edit)"
-      },
-      {
-        "command": "snippeteam.doc.delete",
-        "title": "Supprimer le document",
-        "icon": "$(trash)"
-      },
-      {
-        "command": "snippeteam.doc.restore",
-        "title": "Restaurer le document",
-        "icon": "$(debug-step-back)"
-      },
-      {
-        "command": "snippeteam.cat.quickCreate",
-        "title": "Créer une nouvelle catégorie",
-        "icon": "$(new-folder)"
-      },
-      {
-        "command": "snippeteam.cat.delete",
-        "title": "Supprimer la catégorie",
-        "icon": "$(trash)"
-      },
-      {
-        "command": "snippeteam.cat.rename",
-        "title": "Renommer la catégorie",
-        "icon": "$(edit)"
-      }
+    "categories": [
+        "Other"
     ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "snippeteam",
-          "title": "SnippeTeam",
-          "icon": "resources/dep.svg"
+    "activationEvents": [],
+    "main": "./src/main.js",
+    "contributes": {
+        "configuration": {
+            "title": "SnippeTeam",
+            "properties": {
+                "snippeteam.databaseAdapter": {
+                    "type": "string",
+                    "default": "local",
+                    "enum": [
+                        "local"
+                    ],
+                    "enumDescriptions": [
+                        "Syncs the database file locally."
+                    ],
+                    "description": "Choose how the database will be saved."
+                },
+                "snippeteam.localPath": {
+                    "type": "string",
+                    "default": "~\\AppData\\Roaming\\snippeteam",
+                    "description": "The path of the folder where the database file will be saved."
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "snippeteam.hub",
+                "title": "SnippeTeam: Ouvrir le hub SnippeTeam"
+            },
+            {
+                "command": "snippeteam.set.localFilePath",
+                "title": "SnippeTeam: Change le chemin de la base de donnée"
+            },
+            {
+                "command": "snippeteam.doc.create",
+                "title": "Créer un nouveau document",
+                "icon": "$(new-file)"
+            },
+            {
+                "command": "snippeteam.doc.edit",
+                "title": "Éditer le document",
+                "icon": "$(edit)"
+            },
+            {
+                "command": "snippeteam.doc.trash",
+                "title": "Supprimer le document",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "snippeteam.doc.delete",
+                "title": "Supprimer le document",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "snippeteam.doc.restore",
+                "title": "Restaurer le document",
+                "icon": "$(debug-step-back)"
+            },
+            {
+                "command": "snippeteam.cat.create",
+                "title": "Créer une nouvelle catégorie",
+                "icon": "$(add)"
+            },
+            {
+                "command": "snippeteam.cat.delete",
+                "title": "Supprimer la catégorie",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "snippeteam.cat.rename",
+                "title": "Renommer la catégorie",
+                "icon": "$(edit)"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "snippeteam",
+                    "title": "SnippeTeam",
+                    "icon": "resources/dep.svg"
+                }
+            ]
+        },
+        "views": {
+            "snippeteam": [
+                {
+                    "id": "snippeTeamSearch",
+                    "name": "search",
+                    "icon": "resources/dep.svg",
+                    "contextualTitle": "Snippeteam Search",
+                    "type": "webview",
+                    "initialSize": 1
+                },
+                {
+                    "id": "snippeTeamMenu",
+                    "name": "Menu",
+                    "icon": "resources/dep.svg",
+                    "contextualTitle": "Snippeteam",
+                    "type": "tree",
+                    "initialSize": 99
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "snippeteam.doc.create",
+                    "when": "view == snippeTeamMenu",
+                    "group": "navigation"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "snippeteam.cat.create",
+                    "when": "view == snippeTeamMenu && viewItem == 'categories' ",
+                    "group": "inline"
+                },
+                {
+                    "command": "snippeteam.cat.delete",
+                    "when": "view == snippeTeamMenu && viewItem == 'categoryItem' ",
+                    "group": "inline"
+                },
+                {
+                    "command": "snippeteam.cat.rename",
+                    "when": "view == snippeTeamMenu && viewItem == 'categoryItem' ",
+                    "group": "inline"
+                },
+                {
+                    "command": "snippeteam.doc.trash",
+                    "when": "view == snippeTeamMenu && viewItem == 'docItem' ",
+                    "group": "inline"
+                },
+                {
+                    "command": "snippeteam.doc.edit",
+                    "when": "view == snippeTeamMenu && viewItem == 'docItem' ",
+                    "group": "inline"
+                },
+                {
+                    "command": "snippeteam.doc.restore",
+                    "when": "view == snippeTeamMenu && viewItem == 'docItemTrashed' ",
+                    "group": "inline"
+                },
+                {
+                    "command": "snippeteam.doc.delete",
+                    "when": "view == snippeTeamMenu && viewItem == 'docItemTrashed' ",
+                    "group": "inline"
+                }
+            ]
         }
-      ]
     },
-    "views": {
-      "snippeteam": [
-        {
-          "id": "snippeTeamMenu",
-          "name": "Menu",
-          "icon": "resources/dep.svg",
-          "contextualTitle": "Snippeteam"
-        }
-      ]
+    "scripts": {
+        "lint": "eslint .",
+        "pretest": "npm run lint",
+        "test": "node ./test/runTest.js",
+        "generate_contribution": "node ./src/contribution.js"
     },
-    "menus": {
-      "view/title": [
-        {
-          "command": "snippeteam.doc.create",
-          "when": "view == snippeTeamMenu",
-          "group": "navigation"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "snippeteam.cat.quickCreate",
-          "when": "view == snippeTeamMenu && viewItem == 'categories' ",
-          "group": "inline"
-        },
-        {
-          "command": "snippeteam.cat.delete",
-          "when": "view == snippeTeamMenu && viewItem == 'categoryItem' ",
-          "group": "inline"
-        },
-        {
-          "command": "snippeteam.cat.rename",
-          "when": "view == snippeTeamMenu && viewItem == 'categoryItem' ",
-          "group": "inline"
-        },
-        {
-          "command": "snippeteam.doc.delete",
-          "when": "view == snippeTeamMenu && viewItem == 'docItem' ",
-          "group": "inline"
-        },
-        {
-          "command": "snippeteam.doc.edit",
-          "when": "view == snippeTeamMenu && viewItem == 'docItem' ",
-          "group": "inline"
-        },
-        {
-          "command": "snippeteam.doc.restore",
-          "when": "view == snippeTeamMenu && viewItem == 'docItemTrashed' ",
-          "group": "inline"
-        }
-      ]
+    "devDependencies": {
+        "@types/mocha": "^10.0.2",
+        "@types/node": "18.x",
+        "@types/vscode": "^1.83.0",
+        "@vscode/test-electron": "^2.3.4",
+        "eslint": "^8.50.0",
+        "glob": "^10.3.3",
+        "mocha": "^10.2.0",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "monaco-editor": "^0.44.0",
+        "uuid": "^9.0.1"
     }
-  },
-  "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "node ./test/runTest.js"
-  },
-  "devDependencies": {
-    "@types/mocha": "^10.0.2",
-    "@types/node": "18.x",
-    "@types/vscode": "^1.83.0",
-    "@vscode/test-electron": "^2.3.4",
-    "eslint": "^8.50.0",
-    "glob": "^10.3.3",
-    "mocha": "^10.2.0",
-    "typescript": "^5.2.2"
-  },
-  "dependencies": {
-    "uuid": "^9.0.1"
-  }
 }

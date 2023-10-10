@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>const vscode = acquireVsCodeApi();</script>
+    <link rel="stylesheet" href="{{css}}">
+    <script defer src="{{alpineJS}}"></script>
+    <script defer src="{{tagsInputs}}"></script>
+    <link rel="stylesheet" href="{{monacoCss}}">
+    <script defer src="{{monacoJsLoader}}"></script>
+    <script>
+        function uuidv4() {
+            return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            );
+        }
+    </script>
+    <script type="module">
+        require.config({ paths: { vs: '{{monacoVsFolder}}' } });
+        require(['vs/editor/editor.main'], function () { window.monaco = monaco });
+    </script>
+
+</head>
+
+<body>
+    <div class="snippeteam__content snippeteam__editor">
+        <form @submit.prevent="" x-init="
+                window.addEventListener('message', handleMessage.bind($data));
+                requestDocument();
+                window.editors = {};
+            " x-data="{
+                doc_id:'{{doc_id}}', 
+                doc:null,
+                loaded:false, 
+                requestDocument(){
+                    vscode.postMessage({ command: 'document_request',data: this.doc_id});
+                },
+                requestSave(){
+                    vscode.postMessage({ command: 'document_save',data: {doc_id:this.doc_id,doc:JSON.stringify(this.doc)}});
+                },
+                showInformationMessage(message){
+                    vscode.postMessage({ command: 'showInformationMessage',data: message});
+                },
+                handleMessage(event){
+                    const message = event.data;
+                    console.log(message)
+                    switch (message.command) {
+                        case 'document_response':
+                            this.doc = JSON.parse(message.data);
+                            this.doc.files = this.doc.files.map(file=>JSON.parse(file));
+                            this.loaded = true;
+                            break;
+                        case 'document_saved':
+                            this.doc.modified_at = message.data.modified_at;
+                            this.showInformationMessage('Document << '+ this.doc.title +' >> sauvegardé.')
+                            break;
+                        case 'document_updated':
+                            Object.keys(message.data).forEach(key=>this.doc[key] = message.data[key]);
+                            break
+                    }
+                }
+            }">
+            <template x-if="loaded">
+                <div class="docEditor">
+                    <p class="save_head"><small x-text="'id: '+doc_id"></small><button @click="requestSave">Sauvegarder</button></p>
+
+                    <h1 class="doc_title" @input="doc.title = $event.target.innerText " x-placeholder="Entrez un titre" contenteditable="true" x-text="doc.title"></h1>
+                    <p class="doc_description" @input="doc.description = $event.target.innerText.replace('\n','<br/>') " x-placeholder="Entrez une description" x-model="doc.description" contenteditable="true" x-text="doc.description"></p>
+
+                    <div class="row_action">
+                        <input @change="doc.tags = $event.target.value.split(',')" x-init="tagsInput($refs.tagInput)" x-ref="tagInput" type="tags" placeholder="tags" :value="doc.tags.join(',')" />
+                        <button @click="doc.files.push({ id:uuidv4(), name : 'file.js', language : 'javascript', content : '', version : 1})">Ajouter un document</button>
+                    </div>
+
+                    <template x-for="file in doc.files" :key="file.id">
+                        <div class="file_editor" :id="file.id+'--fileedit'" x-id="['text-editor']">
+
+                            <div class="header">
+
+                                <input type="text" name="filename" x-model="file.name" />
+
+                                <select @change="monaco.editor.setModelLanguage(window.editors[file.id].getModel(), file.language);" name="language" x-model="file.language">
+                                    <template x-for="lang in monaco.languages.getLanguages().sort((a,b)=>a.id.localeCompare(b.id))">
+                                        <option :selected="file.language==lang.id" :value="lang.id" x-text="lang.aliases?lang.aliases[0]:lang.id"></option>
+                                    </template>
+                                </select>
+
+                                <button @click="doc.files = doc.files.filter(x=>x.id != file.id)">Supprimer</button>
+                            </div>
+
+                            <div class="editor_wrapper">
+                                <div x-init="
+                                window.editors[file.id] = monaco.editor.create(document.getElementById($id('text-editor',file.id)), { value:file.content,language:file.language ,  roundedSelection: true,  theme: 'vs-dark' });
+                                window.editors[file.id].onDidChangeModelContent((e) => {
+                                    doc.files.map((f=>{
+                                        if(f.id == file.id){ f.content = window.editors[file.id].getModel().getValue();}
+                                        return f
+                                    }))
+                                });
+                            " :id="$id('text-editor',file.id)" class=" monaco_editor"></div>
+                            </div>
+
+                        </div>
+                    </template>
+                    <div class="action_footer">
+
+                    </div>
+                    <details>
+                        <summary>JSON</summary>
+
+                        <pre x-text="JSON.stringify(doc,null,4)"></pre>
+                    </details>
+                </div>
+            </template>
+
+            <template x-if="!loaded">
+                <div style="height: 100vh;width: 100%;display: flex;justify-content: center;flex-direction: column;">
+                    <i style="align-self:center;font-size:30px" class="fas fa-file-invoice fa-spin"></i>
+                    <h1 style="align-self:center;">Chargement du document... </h1>
+                </div>
+            </template>
+        </form>
+    </div>
+
+
+</body>
+
+</html>
