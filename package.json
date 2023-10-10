@@ -2,7 +2,11 @@
     "name": "snippeteam",
     "displayName": "SnippeTeam",
     "description": "Share snippets with other devs",
-    "version": "0.0.1",
+    "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Bernier154/snippeteam.git"
+    },
     "engines": {
         "vscode": "^1.83.0"
     },

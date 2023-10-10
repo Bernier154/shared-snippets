@@ -5,7 +5,8 @@ const defaultConfigs = require('../defaultConfigs');
 module.exports = class dbLocal {
 
     constructor() {
-        const localFilePathConfig = vscode.workspace.getConfiguration('snippeteam').get('localPath');
+        const localFilePathConfig = vscode.workspace.getConfiguration('snippeteam').get('databaseAdapter.local.localPath');
+        console.log(localFilePathConfig)
         this.folderPath = fs.existsSync(localFilePathConfig) ? localFilePathConfig : defaultConfigs.localFilePath;
         this.jsonPath = this.folderPath + '/db.json';
         this.createJsonIfNotExists();
